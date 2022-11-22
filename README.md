@@ -5,10 +5,10 @@ It is mainly used for demo purposes to illustrate the *App of Apps* pattern with
 
 ## Example
 
-The following command defines an ArgoCD application. This one references several other applications making it an App able to deploy other apps:
+The following command defines an ArgoCD application. This one contains other ArgoCD Application resources. Creating the below application will then trigger the creation of the other applications:
 
 ```
-cat <<EOF | kubectl apply -f
+cat <<EOF | kubectl apply -f -
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -19,7 +19,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://gitlab.com/k8sapps.git
+    repoURL: https://github.com/lucj/k8sapps.git
     targetRevision: main
     path: apps
   destination:
