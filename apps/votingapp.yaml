@@ -10,10 +10,8 @@ spec:
   source:
     repoURL: https://gitlab.com/voting-application/config.git
     targetRevision: master
-    helm:
-      releaseName: votingapp
-      valueFiles:
-        - "values.yaml"
+    path: helm
+    plugin: {}
   destination:
     server: https://kubernetes.default.svc
     namespace: vote
