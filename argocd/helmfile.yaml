@@ -8,15 +8,18 @@ releases:
     labels:
       app: argo
     chart: argo/argo-cd
-    version: ~5.13.2
+    version: ~5.14.1
     values:
-      - ./values.yaml.gotmpl
-    hooks:
-    - events:
-      - presync
-      showlogs: true
-      command: "./bin/create-secret.sh"
-    - events:
-      - postuninstall
-      showlogs: true
-      command: "./bin/delete-secret.sh"
+    - repoServer:
+        extraContainers:
+        - name: plugin
+          image: lucj/argocd-plugin-helmfile:v0.0.10
+          command: ["/var/run/argocd/argocd-cmp-server"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 999
+          volumeMounts:
+          - mountPath: /var/run/argocd
+            name: var-files
+          - mountPath: /home/argocd/cmp-server/plugins
+            name: plugins

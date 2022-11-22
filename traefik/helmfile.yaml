@@ -8,6 +8,9 @@ releases:
     labels:
       app: traefik
     chart: traefik/traefik
-    version: ~19.0.3
+    version: ~20.4.1 
     values:
-      - ./values.yaml
+    - providers:
+        kubernetesIngress:
+          publishedService:
+            enabled: true
