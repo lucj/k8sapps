@@ -1,11 +1,9 @@
---- WIP ---
-
-This repo contains a couple of applications defined using the Helmfile format.  
+This repo contains a couple of applications (more to be added) defined using the Helmfile format.  
 It is mainly used for demo purposes to illustrate the *App of Apps* pattern with ArgoCD.
 
 ## Example
 
-The following command defines an ArgoCD application. This one contains other ArgoCD Application resources. Creating the below application will then trigger the creation of the other applications:
+The following command defines the yaml specification of an ArgoCD application:
 
 ```
 cat <<EOF | kubectl apply -f -
@@ -31,3 +29,9 @@ spec:
       - CreateNamespace=true
 EOF
 ```
+
+This application consists in a folder containing other ArgoCD Application resources. Creating the above application will then trigger the creation of the other applications that are referenced.
+
+## Status
+
+This is a work in progress. This repo is dedicated to demo purposes only.
