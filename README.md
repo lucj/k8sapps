@@ -19,8 +19,10 @@ multipass shell kube
 Next we install [k3s](https://k3s.io) inside of it:
 
 ```
-curl -sSL https://get.k3s.io | sh
+curl -sfL https://get.k3s.io | sh -s - --disable traefik
 ```
+
+Note: we remove the traefik installation as it will be done in the next step
 
 Next we configure kubectl to it uses the kubeconfig file created by k3s:
 
@@ -72,7 +74,7 @@ cd k8sapps/argocd
 helmfile apply
 ```
 
-Note: this quick installation path does not take into account the usage of a private key to encrypt sensitive properties in the values files (more on that in [./argocd/](./argocd/)).
+Note: this quick installation path installs ArgoCD and the helmfile plugin (more on that one in [https://github.com/lucj/argocd-helmfile-plugin](https://github.com/lucj/argocd-helmfile-plugin). It also create an age encryption key to encrypt sensitive properties in the values files (more information in [./argocd/](./argocd/)).
 
 ## Example
 

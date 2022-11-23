@@ -1,17 +1,9 @@
 ## Without encryption
 
-The following command installs ArgoCD and its helmfile plugin ([https://github.com/lucj/argocd-helmfile-plugin](https://github.com/lucj/argocd-helmfile-plugin)) in a cluster, but it does not allow the usage of SOPS / age encryption key:
+The following command installs ArgoCD and its helmfile plugin ([https://github.com/lucj/argocd-helmfile-plugin](https://github.com/lucj/argocd-helmfile-plugin)) in a cluster. It creates an *age* encryption key at the same time. This key can be used by an admin to encrypt the content of a values file, and by ArgoCD to decrypt that content will creating / upgrading an app.
 
 ```
 helmfile apply
-```
-
-## With encryption
-
-The following command installs ArgoCD and its helmfile plugin ([https://github.com/lucj/argocd-helmfile-plugin](https://github.com/lucj/argocd-helmfile-plugin)) in a cluster and creates a SOPS / age encryption key:
-
-```
-helmfile -f helmfile.age.yaml apply
 ```
 
 ## Access the dashboard
