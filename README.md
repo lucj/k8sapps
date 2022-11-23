@@ -44,6 +44,7 @@ Finally, we install a couple of tools in the VM:
 - helm client
 - helm-diff plugin
 - helmfile binary
+- age cli (in case we need to encrypt data in value files)
 
 This can be done with the following commands:
 
@@ -62,6 +63,10 @@ helm plugin install https://github.com/databus23/helm-diff
 curl -sSLO https://github.com/helmfile/helmfile/releases/download/v0.148.1/helmfile_0.148.1_linux_$ARCH.tar.gz
 tar zxvf helmfile_0.148.1_linux_$ARCH.tar.gz
 sudo mv ./helmfile /usr/local/bin/
+
+# Age
+sudo apt update
+sudo apt install age
 ```
 
 ## ArgoCD
@@ -74,7 +79,7 @@ cd k8sapps/argocd
 helmfile apply
 ```
 
-Note: this quick installation path installs ArgoCD and the helmfile plugin (more on that one in [https://github.com/lucj/argocd-helmfile-plugin](https://github.com/lucj/argocd-helmfile-plugin). It also create an age encryption key to encrypt sensitive properties in the values files (more information in [./argocd/](./argocd/)).
+Note: this quick installation path installs ArgoCD and the helmfile plugin. It also create an age encryption key to encrypt sensitive properties in the values files if needed. You can find additional information in [https://github.com/lucj/argocd-helmfile-plugin](https://github.com/lucj/argocd-helmfile-plugin).
 
 ## Example
 
@@ -104,6 +109,22 @@ spec:
       - CreateNamespace=true
 EOF
 ```
+
+Let's now access the ArgoCD UI:
+
+- first we retrieve the admin password
+
+```
+kubectl -n argo get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode
+```
+
+- next we expose the UI with a port-forward
+
+```
+kubectl -n argo port-forward service/argo-argocd-server 8080:443 --address 0.0.0.0
+```
+
+- then we can access the UI using the IP address of the VM created above
 
 From the ArgoCD UI we can see that the creation of the above application automatically triggers the creation of the other applications that are defined in the apps folder (traefik, cert-manager, VotingApp and the Elastic stack).
 
