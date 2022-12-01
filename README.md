@@ -91,7 +91,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: k8sapps
-  namespace: argo
+  namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -115,13 +115,13 @@ Let's now access the ArgoCD UI:
 - first we retrieve the admin password
 
 ```
-kubectl -n argo get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode
 ```
 
 - next we expose the UI with a port-forward
 
 ```
-kubectl -n argo port-forward service/argo-argocd-server 8080:443 --address 0.0.0.0
+kubectl -n argocd port-forward service/argocd-server 8080:443 --address 0.0.0.0
 ```
 
 - then we can access the UI using the IP address of the VM created above
