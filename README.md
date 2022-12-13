@@ -1,4 +1,4 @@
-This repo contains a couple of applications (more to be added) defined using the Helmfile format. It is mainly used for demo purposes to illustrate the *App of Apps* pattern with ArgoCD.
+This repo contains a couple of applications (more to be added) defined using the Helmfile format. It is mainly used for demo purposes to illustrate the *App of Apps* pattern: a single Argo CD's application is used to deploy all the other applications needed in the cluster.
 
 ## Local Kubernetes
 
@@ -69,9 +69,9 @@ sudo apt update
 sudo apt install age
 ```
 
-## ArgoCD
+## Argo CD
 
-ArgoCD is the first application which will be installed in the cluster as it will be in charge of installing the other applications next. Clone this repository in the VM and from the argocd folder run the following command:
+Argo CD is the first application which will be installed in the cluster as it will be in charge of installing the other applications next. Clone this repository in the VM and from the *argocd* folder run the following command:
 
 ```
 git clone https://github.com/lucj/k8sapps.git
@@ -79,11 +79,11 @@ cd k8sapps/argocd
 helmfile apply
 ```
 
-Note: this quick installation path installs ArgoCD and the helmfile plugin. It also create an age encryption key to encrypt sensitive properties in the values files if needed. You can find additional information in [https://github.com/lucj/argocd-helmfile-plugin](https://github.com/lucj/argocd-helmfile-plugin).
+Note: this quick installation path installs Argo CD and the helmfile plugin. It also create an age encryption key to encrypt sensitive properties in the values files if needed. You can find additional information in [https://github.com/lucj/argocd-helmfile-plugin](https://github.com/lucj/argocd-helmfile-plugin).
 
 ## Example
 
-Once ArgoCD is installed you can run the following command which defines the yaml specification of an ArgoCD application. This application consists in a folder containing other ArgoCD Application resources.
+Once Argo CD is installed you can run the following command which defines the yaml specification of an Argo CD application. This application consists in a folder containing other Argo CD Application resources.
 
 ```
 cat <<EOF | kubectl apply -f -
@@ -99,7 +99,7 @@ spec:
   source:
     repoURL: https://github.com/lucj/k8sapps.git
     targetRevision: main
-    path: apps
+    path: app-of-apps
   destination:
     server: https://kubernetes.default.svc
     namespace: k8sapps
@@ -110,7 +110,7 @@ spec:
 EOF
 ```
 
-Let's now access the ArgoCD UI:
+Let's now access Argo CD's web frontend:
 
 - first we retrieve the admin password
 
@@ -126,9 +126,9 @@ kubectl -n argocd port-forward service/argocd-server 8080:443 --address 0.0.0.0
 
 - then we can access the UI using the IP address of the VM created above
 
-From the ArgoCD UI we can see that the creation of the above application automatically triggers the creation of the other applications that are defined in the apps folder (traefik, cert-manager, VotingApp and the Elastic stack).
+From the Argo CD UI we can see that the creation of the above application automatically triggers the creation of the other applications that are defined in the apps folder (traefik, cert-manager, VotingApp and the Elastic stack).
 
-![ArgoCD](./images/argocd.png)
+![Argo CD](./images/argocd.png)
 
 ## Status
 

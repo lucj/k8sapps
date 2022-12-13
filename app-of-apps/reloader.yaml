@@ -1,8 +1,8 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: elastic
-  namespace: argo
+  name: reloader
+  namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -10,11 +10,11 @@ spec:
   source:
     repoURL: https://github.com/lucj/k8sapps.git
     targetRevision: main
-    path: elastic
+    path: apps/reloader
     plugin: {}
   destination:
     server: https://kubernetes.default.svc
-    namespace: elastic
+    namespace: reloader
   syncPolicy:
     automated: {}
     syncOptions:

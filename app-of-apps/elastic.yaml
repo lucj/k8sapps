@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: prometheus
+  name: elastic
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,11 +10,11 @@ spec:
   source:
     repoURL: https://github.com/lucj/k8sapps.git
     targetRevision: main
-    path: prometheus-stack
+    path: apps/elastic
     plugin: {}
   destination:
     server: https://kubernetes.default.svc
-    namespace: prometheus
+    namespace: elastic
   syncPolicy:
     automated: {}
     syncOptions:

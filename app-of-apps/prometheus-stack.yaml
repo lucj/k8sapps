@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: reloader
+  name: prometheus
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,11 +10,11 @@ spec:
   source:
     repoURL: https://github.com/lucj/k8sapps.git
     targetRevision: main
-    path: reloader
+    path: apps/prometheus-stack
     plugin: {}
   destination:
     server: https://kubernetes.default.svc
-    namespace: reloader
+    namespace: prometheus
   syncPolicy:
     automated: {}
     syncOptions:

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: traefik
+  name: loki
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,11 +10,11 @@ spec:
   source:
     repoURL: https://github.com/lucj/k8sapps.git
     targetRevision: main
-    path: traefik
+    path: apps/loki-stack
     plugin: {}
   destination:
     server: https://kubernetes.default.svc
-    namespace: traefik
+    namespace: loki
   syncPolicy:
     automated: {}
     syncOptions:

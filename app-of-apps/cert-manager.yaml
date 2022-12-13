@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: descheduler
+  name: cert-manager
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,11 +10,11 @@ spec:
   source:
     repoURL: https://github.com/lucj/k8sapps.git
     targetRevision: main
-    path: descheduler
+    path: apps/cert-manager
     plugin: {}
   destination:
     server: https://kubernetes.default.svc
-    namespace: descheduler
+    namespace: cert-manager
   syncPolicy:
     automated: {}
     syncOptions:
