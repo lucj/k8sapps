@@ -1,0 +1,11 @@
+repositories:
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
+
+releases:
+  - name: prometheus-stack
+    namespace: prometheus-stack
+    labels:
+      app: prometheus-stack
+    chart: prometheus-community/kube-prometheus-stack
+    version: ~42.3.0
