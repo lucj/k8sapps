@@ -4,7 +4,7 @@ repositories:
 
 releases:
   - name: prometheus-stack
-    namespace: prometheus-stack
+    namespace: prometheus
     labels:
       app: prometheus-stack
     chart: prometheus-community/kube-prometheus-stack
