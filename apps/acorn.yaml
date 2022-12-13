@@ -11,7 +11,6 @@ spec:
     repoURL: https://github.com/lucj/k8sapps.git
     targetRevision: main
     path: acorn
-    plugin: {}
   destination:
     server: https://kubernetes.default.svc
   syncPolicy:
