@@ -7,8 +7,10 @@ To create a local Kubernetes one-node cluster you can use [Multipass](https://mu
 First we create a VM named kube:
 
 ```
-multipass launch -n kube -c 2 -d 15G -m 4G
+multipass launch -n kube -c 4 -d 20G -m 6G
 ```
+
+Note: we use specific flags to give the VM more resources than the default ones (1 cpu, 1G RAM, 5G Disk) so we have enough to install several applications
 
 Next we run a shell in that VM:
 
@@ -126,7 +128,7 @@ kubectl -n argocd port-forward service/argocd-server 8080:443 --address 0.0.0.0
 
 - then we can access the UI using the IP address of the VM created above
 
-From the Argo CD UI we can see that the creation of the above application automatically triggers the creation of the other applications that are defined in the apps folder (traefik, cert-manager, VotingApp and the Elastic stack).
+From the Argo CD UI we can see that the creation of the above application automatically triggers the creation of the other applications that are defined in the apps folder (traefik, cert-manager, ...).
 
 ![Argo CD](./images/argocd.png)
 
