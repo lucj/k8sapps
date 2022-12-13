@@ -8,4 +8,4 @@ releases:
     labels:
       app: prometheus-stack
     chart: prometheus-community/kube-prometheus-stack
-    version: ~42.3.0
+    version: ~43.0.0
