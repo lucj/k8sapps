@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/lucj/k8sapps.git
     targetRevision: main
-    path: loki
+    path: loki-stack
     plugin: {}
   destination:
     server: https://kubernetes.default.svc
