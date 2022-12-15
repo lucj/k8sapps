@@ -8,10 +8,11 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/lucj/k8sapps.git
-    targetRevision: main
-    path: apps/descheduler
-    plugin: {}
+    chart: descheduler
+    repoURL: https://kubernetes-sigs.github.io/descheduler
+    targetRevision: 0.25.2
+    helm:
+      releaseName: descheduler
   destination:
     server: https://kubernetes.default.svc
     namespace: descheduler
@@ -19,3 +20,4 @@ spec:
     automated: {}
     syncOptions:
       - CreateNamespace=true
+

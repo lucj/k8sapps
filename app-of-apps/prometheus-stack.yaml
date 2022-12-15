@@ -1,21 +1,26 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: prometheus
+  name: kube-prometheus-stack
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
-  source:
-    repoURL: https://github.com/lucj/k8sapps.git
-    targetRevision: main
-    path: apps/prometheus-stack
-    plugin: {}
   destination:
     server: https://kubernetes.default.svc
-    namespace: prometheus
+    namespace: monitoring
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 43.0.0
+    helm:
+      skipCrds: true
+    chart: kube-prometheus-stack
   syncPolicy:
-    automated: {}
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true

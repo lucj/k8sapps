@@ -8,10 +8,14 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/lucj/k8sapps.git
-    targetRevision: main
-    path: apps/traefik
-    plugin: {}
+    chart: traefik
+    repoURL: https://helm.traefik.io/traefik
+    targetRevision: 20.8.0
+    helm:
+      releaseName: traefik
+      parameters:
+      - name: providers.kubernetesIngress.publishedService.enabled
+        value: "true"
   destination:
     server: https://kubernetes.default.svc
     namespace: traefik

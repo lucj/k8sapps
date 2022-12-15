@@ -8,10 +8,11 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/lucj/k8sapps.git
-    targetRevision: main
-    path: apps/reloader
-    plugin: {}
+    chart: reloader
+    repoURL: https://stakater.github.io/stakater-charts
+    targetRevision: 0.0.126
+    helm:
+      releaseName: reloader
   destination:
     server: https://kubernetes.default.svc
     namespace: reloader

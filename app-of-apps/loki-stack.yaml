@@ -8,10 +8,11 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/lucj/k8sapps.git
-    targetRevision: main
-    path: apps/loki-stack
-    plugin: {}
+    chart: loki-stack
+    repoURL: https://grafana.github.io/helm-charts
+    targetRevision: 2.8.8
+    helm:
+      releaseName: loki
   destination:
     server: https://kubernetes.default.svc
     namespace: loki
@@ -19,3 +20,4 @@ spec:
     automated: {}
     syncOptions:
       - CreateNamespace=true
+
