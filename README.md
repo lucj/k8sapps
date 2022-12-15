@@ -1,4 +1,9 @@
-This repo contains a couple of applications (more to be added) defined using the Helmfile format. It is mainly used for demo purposes to illustrate the *App of Apps* pattern: a single Argo CD's application is used to deploy all the other applications needed in the cluster.
+This repo contains a couple of applications (more to be added) defined either as:
+- a list of yaml manifests
+- a Helm chart
+- a Helmfile
+
+It is mainly used for demo purposes to illustrate the *App of Apps* pattern: a single Argo CD's application is used to deploy all the other applications needed in the cluster.
 
 ## Local Kubernetes
 

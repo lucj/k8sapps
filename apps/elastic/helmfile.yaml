@@ -1,0 +1,6 @@
+releases:
+- name: elastic
+  namespace: elastic
+  labels:
+    app: elastic
+  chart: .
