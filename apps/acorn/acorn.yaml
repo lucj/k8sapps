@@ -91,6 +91,12 @@ rules:
   - rolebindings
   verbs:
   - '*'
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - '*'
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -107,6 +113,279 @@ subjects:
   namespace: acorn-system
 
 ---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: acorn:cluster:view
+rules:
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - projects
+  verbs:
+  - get
+  - list
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: acorn:cluster:edit
+rules:
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - projects
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - projects
+  verbs:
+  - create
+  - delete
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: acorn:project:admin
+rules:
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - apps
+  - acornimagebuilds
+  - builders
+  - images
+  - volumes
+  - containerreplicas
+  - credentials
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - images/details
+  verbs:
+  - get
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - infos
+  verbs:
+  - list
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - apps/log
+  verbs:
+  - get
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - apps
+  - images
+  - credentials
+  - secrets
+  verbs:
+  - create
+  - update
+  - delete
+  - patch
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - images/tag
+  - apps/confirmupgrade
+  verbs:
+  - create
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - volumes
+  - containerreplicas
+  verbs:
+  - delete
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - images/push
+  - images/pull
+  - containerreplicas/exec
+  - secrets/reveal
+  verbs:
+  - get
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - builders
+  - acornimagebuilds
+  verbs:
+  - create
+  - delete
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - builders/port
+  verbs:
+  - get
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: acorn:project:view
+rules:
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - apps
+  - acornimagebuilds
+  - builders
+  - images
+  - volumes
+  - containerreplicas
+  - credentials
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - images/details
+  verbs:
+  - get
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - infos
+  verbs:
+  - list
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: acorn:project:view-logs
+rules:
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - apps/log
+  verbs:
+  - get
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: acorn:project:edit
+rules:
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - apps
+  - acornimagebuilds
+  - builders
+  - images
+  - volumes
+  - containerreplicas
+  - credentials
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - images/details
+  verbs:
+  - get
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - infos
+  verbs:
+  - list
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - apps/log
+  verbs:
+  - get
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - apps
+  - images
+  - credentials
+  - secrets
+  verbs:
+  - create
+  - update
+  - delete
+  - patch
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - images/tag
+  - apps/confirmupgrade
+  verbs:
+  - create
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - volumes
+  - containerreplicas
+  verbs:
+  - delete
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - images/push
+  - images/pull
+  - containerreplicas/exec
+  - secrets/reveal
+  verbs:
+  - get
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: acorn:project:build
+rules:
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - builders
+  - acornimagebuilds
+  verbs:
+  - create
+  - delete
+- apiGroups:
+  - api.acorn.io
+  resources:
+  - builders/port
+  verbs:
+  - get
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: acorn-image-system
+
+---
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -116,6 +395,8 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  labels:
+    acorn.io/project: "true"
   name: acorn
 
 ---
@@ -167,10 +448,15 @@ spec:
       containers:
       - args:
         - api-server
-        image: ghcr.io/acorn-io/acorn:v0.3.1
+        env:
+        - name: ACORN_IMAGE
+          value: ghcr.io/acorn-io/acorn:v0.5.1
+        image: ghcr.io/acorn-io/acorn:v0.5.1
         name: acorn-api
         ports:
         - containerPort: 7443
+        securityContext:
+          runAsUser: 1000
       serviceAccountName: acorn-system
 
 ---
@@ -199,14 +485,19 @@ spec:
       containers:
       - args:
         - controller
-        image: ghcr.io/acorn-io/acorn:v0.3.1
+        env:
+        - name: ACORN_IMAGE
+          value: ghcr.io/acorn-io/acorn:v0.5.1
+        image: ghcr.io/acorn-io/acorn:v0.5.1
         name: acorn-controller
+        securityContext:
+          runAsUser: 1000
       serviceAccountName: acorn-system
 
 ---
 apiVersion: v1
 data:
-  config: '{"ingressClassName":null,"clusterDomains":null,"letsEncrypt":null,"letsEncryptEmail":"","letsEncryptTOSAgree":null,"setPodSecurityEnforceProfile":null,"podSecurityEnforceProfile":"","defaultPublishMode":"","internalClusterDomain":"","acornDNS":null,"acornDNSEndpoint":null}'
+  config: '{"ingressClassName":null,"clusterDomains":null,"letsEncrypt":null,"letsEncryptEmail":"","letsEncryptTOSAgree":null,"setPodSecurityEnforceProfile":null,"podSecurityEnforceProfile":"","defaultPublishMode":"","httpEndpointPattern":null,"internalClusterDomain":"","acornDNS":null,"acornDNSEndpoint":null,"autoUpgradeInterval":null,"recordBuilds":null,"publishBuilders":null,"builderPerProject":null,"internalRegistryPrefix":null,"ignoreUserLabelsAndAnnotations":null,"allowUserLabels":[],"allowUserAnnotations":[],"workloadMemoryDefault":null,"workloadMemoryMaximum":null,"useCustomCABundle":false,"propagateProjectAnnotations":[],"propagateProjectLabels":[]}'
 kind: ConfigMap
 metadata:
   name: acorn-config
