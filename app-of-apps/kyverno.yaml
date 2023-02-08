@@ -1,21 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: elastic
+  name: kyverno
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    chart: elastic
-    repoURL: registry-1.docker.io/lucj
-    targetRevision: v1.0.0
-    helm:
-      releaseName: elastic
+    repoURL: https://github.com/lucj/k8sapps.git
+    targetRevision: main
+    path: apps/kyverno
+    plugin: {}
   destination:
     server: https://kubernetes.default.svc
-    namespace: elastic
+    namespace: kyverno
   syncPolicy:
     automated: {}
     syncOptions:
