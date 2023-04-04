@@ -8,10 +8,11 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/lucj/k8sapps.git
-    targetRevision: main
-    path: apps/kyverno
-    plugin: {}
+    chart: kyverno
+    repoURL: https://kyverno.github.io/kyverno/
+    targetRevision: 1.9.2
+    helm:
+      releaseName: kyverno
   destination:
     server: https://kubernetes.default.svc
     namespace: kyverno
