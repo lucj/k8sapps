@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: trivy-operator
-  namespace: trivy
+  namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
