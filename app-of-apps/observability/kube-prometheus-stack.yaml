@@ -2,8 +2,6 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: kube-prometheus-stack
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -14,10 +12,17 @@ spec:
   project: default
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
-    targetRevision: 43.0.0
-    helm:
-      skipCrds: true
+    targetRevision: 45.9.1
     chart: kube-prometheus-stack
+    helm:
+      releaseName: kube-prometheus
+      parameters:
+      - name: prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues
+        value: "false"
+      - name: prometheus.prometheusSpec.serviceMonitorSelector
+        value: "{}"
+      - name: prometheus.prometheusSpec.serviceMonitorNamespaceSelector
+        value: "{}"
   syncPolicy:
     automated:
       prune: true

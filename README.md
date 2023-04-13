@@ -1,7 +1,8 @@
+## Purpose
+
 This repo contains a couple of applications (more to be added) defined either as:
 - a list of yaml manifests
 - a Helm chart
-- a Helmfile
 
 It is mainly used for demo purposes to illustrate the *App of Apps* pattern: a single Argo CD's application is used to deploy all the other applications needed in the cluster.
 
@@ -29,7 +30,7 @@ Next we install [k3s](https://k3s.io) inside of it:
 curl -sfL https://get.k3s.io | sh -s - --disable traefik
 ```
 
-Note: we remove the traefik installation as it will be done in the next step
+Note: we removed the traefik installation as it will be done in the next step
 
 Next we configure kubectl to it uses the kubeconfig file created by k3s:
 
@@ -47,50 +48,46 @@ NAME   STATUS   ROLES                  AGE   VERSION
 kube   Ready    control-plane,master   25s   v1.25.4+k3s1
 ```
 
-Finally, we install a couple of tools in the VM:
-- helm client
-- helm-diff plugin
-- helmfile binary
-- age cli (in case we need to encrypt data in value files)
+## A couple of prerequisites
 
-This can be done with the following commands:
+Install the following components in your newly created cluster:
+- Helm
+- helm-diff
+- Helmfile ([https://github.com/helmfile/helmfile#installation](https://github.com/helmfile/helmfile#installation))
 
-```
-ARCH=amd64 # change to match your current architecture (amd64 or arm64)
+On a Linux or MacOS machine the installation can be done with the following command:
+
+```sh
+OS=linux     # change to match your current os (linux / darwin)
+ARCH=amd64   # change to match your current architecture (amd64 / arm64)
 
 # Helm
-curl -sSLO https://get.helm.sh/helm-v3.10.2-linux-$ARCH.tar.gz
-tar zxvf helm-v3.10.2-linux-$ARCH.tar.gz
-sudo mv ./linux-$ARCH/helm /usr/local/bin
+HELM_VERSION=v3.11.1
+curl -sSLO https://get.helm.sh/helm-${HELM_VERSION}-$OS-$ARCH.tar.gz
+tar zxvf helm-${HELM_VERSION}-$OS-$ARCH.tar.gz
+sudo mv ./$OS-$ARCH/helm /usr/local/bin
 
 # Helm-diff
 helm plugin install https://github.com/databus23/helm-diff
 
 # Helmfile
-curl -sSLO https://github.com/helmfile/helmfile/releases/download/v0.148.1/helmfile_0.148.1_linux_$ARCH.tar.gz
-tar zxvf helmfile_0.148.1_linux_$ARCH.tar.gz
+HELMFILE_VERSION=0.152.0
+curl -sSLO https://github.com/helmfile/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_${HELMFILE_VERSION}_${OS}_$ARCH.tar.gz
+tar zxvf helmfile_${HELMFILE_VERSION}_${OS}_$ARCH.tar.gz
 sudo mv ./helmfile /usr/local/bin/
-
-# Age
-sudo apt update
-sudo apt install age
 ```
 
-## Argo CD
+## ArgoCD installation
 
-Argo CD is the first application which will be installed in the cluster as it will be in charge of installing the other applications next. Clone this repository in the VM and from the *argocd* folder run the following command:
+The following command installs Argo CD using Helmfile:
 
 ```
-git clone https://github.com/lucj/k8sapps.git
-cd k8sapps/argocd
 helmfile apply
 ```
 
-Note: this quick installation path installs Argo CD and the helmfile plugin. It also create an age encryption key to encrypt sensitive properties in the values files if needed. You can find additional information in [https://github.com/lucj/argocd-helmfile-plugin](https://github.com/lucj/argocd-helmfile-plugin).
-
 ## Example
 
-Once Argo CD is installed you can run the following command which defines the yaml specification of an Argo CD application. This application consists in a folder containing other Argo CD Application resources.
+Once Argo CD is installed you can run the following command which creates an Argo CD application in charge of deploying other applications defined in the *app-of-apps/base* folder:
 
 ```
 cat <<EOF | kubectl apply -f -
@@ -106,7 +103,7 @@ spec:
   source:
     repoURL: https://github.com/lucj/k8sapps.git
     targetRevision: main
-    path: app-of-apps
+    path: app-of-apps/base
   destination:
     server: https://kubernetes.default.svc
     namespace: k8sapps
@@ -116,6 +113,8 @@ spec:
       - CreateNamespace=true
 EOF
 ```
+
+## Argo CD dashboard
 
 Let's now access Argo CD's web frontend:
 
