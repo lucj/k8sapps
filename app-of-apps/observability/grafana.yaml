@@ -10,12 +10,15 @@ spec:
   source:
     chart: grafana
     repoURL: https://grafana.github.io/helm-charts
-    targetRevision: 6.52.5
+    targetRevision: 6.52.9
     helm:
       releaseName: grafana
+      parameters:
+      - name: sidecar.dashboards.enabled
+        value: "true"
   destination:
     server: https://kubernetes.default.svc
-    namespace: grafana
+    namespace: monitoring
   syncPolicy:
     automated: {}
     syncOptions:
