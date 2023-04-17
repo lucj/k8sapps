@@ -59,7 +59,7 @@ On a Linux or MacOS machine the installation can be done with the following comm
 
 ```sh
 OS=linux     # change to match your current os (linux / darwin)
-ARCH=arm64   # change to match your current architecture (amd64 / arm64)
+ARCH=amd64   # change to match your current architecture (amd64 / arm64)
 
 # Helm
 HELM_VERSION=v3.11.1
@@ -102,8 +102,15 @@ Note: if you need to install Argo CD with a helmfile plugin and sops/age key ple
 ## Examples
 
 Once Argo CD is installed you can run the following command which creates an Argo CD application in charge of deploying the  applications defined in the *app-of-apps/base* folder:
+- *Traefik*
+- *Argo Rollout*
+- *Descheduler*
+- *Cert-Manager*
+- *Reloader*
 
 ```
+TYPE=base
+
 cat <<EOF | kubectl apply -f -
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -117,7 +124,7 @@ spec:
   source:
     repoURL: https://github.com/lucj/k8sapps.git
     targetRevision: main
-    path: app-of-apps/base
+    path: app-of-apps/$TYPE
   destination:
     server: https://kubernetes.default.svc
     namespace: k8sapps
@@ -128,7 +135,7 @@ spec:
 EOF
 ```
 
-Note: on top of *base* applications, additional apps are defined and grouped in different categories such as *observability*, *security* under the *app-of-apps* folder.
+Note: on top of *base* applications, additional apps are defined and grouped in different categories such as *observability*, *security* or simply *demo* under the *app-of-apps* folder.
 
 ## Argo CD dashboard
 
