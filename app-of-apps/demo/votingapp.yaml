@@ -10,7 +10,7 @@ spec:
   source:
     chart: votingapp
     repoURL: registry-1.docker.io/lucj
-    targetRevision: v1.0.79
+    targetRevision: v1.0.82
     helm:
       releaseName: votingapp
   destination:
