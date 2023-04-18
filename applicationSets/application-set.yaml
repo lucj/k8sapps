@@ -8,9 +8,7 @@ spec:
         repoURL: https://github.com/lucj/k8sapps.git
         revision: HEAD
         files:
-        - path: "applicationSets/*.yaml"
-        - path: "applicationSets/application-set.yaml"
-          exclude: true
+        - path: "applicationSets/**/*.yaml"
   template:
     metadata:
       name: '{{chart}}'
