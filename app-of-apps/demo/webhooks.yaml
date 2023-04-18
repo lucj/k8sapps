@@ -14,16 +14,16 @@ spec:
     helm:
       releaseName: webhooks
       parameters:
-      - name: domain
-        value: ""
-      - name: tls
-        value: "false"
-      - name: www.replicas
-        value: "1"
-      - name: api.replicas
-        value: "1"
-      - name: wss.replicas
-        value: "1"
+        - name: domain
+          value: ""
+        - name: tls
+          value: "false"
+        - name: www.replicas
+          value: "1"
+        - name: api.replicas
+          value: "1"
+        - name: wss.replicas
+          value: "1"
   destination:
     server: https://kubernetes.default.svc
     namespace: webhooks
