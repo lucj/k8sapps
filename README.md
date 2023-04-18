@@ -135,7 +135,7 @@ spec:
 EOF
 ```
 
-Note: on top of *base* applications, additional apps are defined and grouped in different categories such as *observability*, *security* or simply *demo* under the *app-of-apps* folder.
+Note: on top of *base* applications, additional apps are defined and grouped in different categories such as *observability*, *security* or *demo* under the *apps* folder.
 
 ## Argo CD dashboard
 
