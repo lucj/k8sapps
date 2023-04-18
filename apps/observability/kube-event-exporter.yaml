@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubernetes-event-exporter
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: event-exporter
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: kubernetes-event-exporter
+    targetRevision: 2.2.6
+    helm:
+      releaseName: kubernetes-event-exporter
+      values: |
+        config:
+          logLevel: debug
+          logFormat: pretty
+          receivers:
+            - name: "webhooks"
+              webhook:
+                endpoint: "https://webhooks.app/data"
+                headers:
+                  Authorization: "Bearer REPLACE_WITH_BEARER_TOKEN"
+                layout:
+                  message: "{{ .Message }}"
+                  reason: "{{ .Reason }}"
+                  type: "{{ .Type }}"
+                  count: "{{ .Count }}"
+                  kind: "{{ .InvolvedObject.Kind }}"
+                  name: "{{ .InvolvedObject.Name }}"
+                  namespace: "{{ .Namespace }}"
+                  component: "{{ .Source.Component }}"
+                  host: "{{ .Source.Host }}"
+          route:
+            routes:
+              - match:
+                  - kind: "Pod|Deployment|ReplicaSet" 
+                    namespace: "default"   
+                    receiver: "webhooks"
+                drop:
+                  - type: "Normal"
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
