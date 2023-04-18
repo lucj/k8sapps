@@ -40,6 +40,7 @@ spec:
   project: default
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
     targetRevision: 45.10.1
     helm:
       releaseName: kube-prometheus-stack
@@ -47,10 +48,10 @@ spec:
       parameters:
       - name: prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues
         value: "false"
-      - name: prometheus.prometheusSpec.serviceMonitorSelector
-        value: "{}"
-      - name: prometheus.prometheusSpec.serviceMonitorNamespaceSelector
-        value: "{}"
+      - name: grafana.sidecar.dashboards.enabled
+        value: "true"
+      - name: grafana.sidecar.dashboards.labelValue
+        value: "true"
   syncPolicy:
     automated:
       prune: true
