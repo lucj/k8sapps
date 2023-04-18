@@ -16,6 +16,8 @@ spec:
       parameters:
       - name: sidecar.dashboards.enabled
         value: "true"
+      - name: sidecar.dashboards.labelValue
+        value: "true"
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
