@@ -1,0 +1,8 @@
+chart: cert-manager
+repo: https://charts.jetstack.io
+revision: 1.10.1
+namespace: cert-manager
+helm:
+  parameters:
+  - name: installCRDs
+    value: "true"

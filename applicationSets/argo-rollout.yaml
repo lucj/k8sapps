@@ -1,0 +1,9 @@
+chart: argo-rollouts
+repo: https://argoproj.github.io/argo-helm
+revision: 2.22.2
+namespace: argo
+parameters:
+  - name: installCRDs
+    value: "true"
+  - name: dashboard.enabled
+    value: "true"

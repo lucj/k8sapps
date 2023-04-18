@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: k8sapps
+spec:
+  generators:
+    - git:
+        repoURL: https://github.com/lucj/k8sapps.git
+        revision: HEAD
+        files:
+        - path: "applicationSets/*.yaml"
+        - path: "applicationSets/application-set.yaml"
+          exclude: true
+  template:
+    metadata:
+      name: '{{chart}}'
+    spec:
+      project: default
+      source:
+        repoURL: '{{repo}}'
+        chart: '{{chart}}'
+        targetRevision: '{{revision}}'
+        helm:
+          releaseName: '{{chart}}'
+          parameters: '{{parameters}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{namespace}}'
+      syncPolicy:
+        automated: {}
+        syncOptions:
+          - CreateNamespace=true
