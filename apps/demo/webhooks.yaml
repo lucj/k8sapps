@@ -10,7 +10,7 @@ spec:
   source:
     chart: webhooks
     repoURL: registry-1.docker.io/lucj
-    targetRevision: v1.0.6
+    targetRevision: v1.0.7
     helm:
       releaseName: webhooks
       parameters:
