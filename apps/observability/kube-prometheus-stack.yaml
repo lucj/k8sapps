@@ -50,8 +50,6 @@ spec:
         value: "false"
       - name: grafana.sidecar.dashboards.enabled
         value: "true"
-      - name: grafana.sidecar.dashboards.labelValue
-        value: "true"
   syncPolicy:
     automated:
       prune: true
