@@ -124,7 +124,7 @@ spec:
   source:
     repoURL: https://github.com/lucj/k8sapps.git
     targetRevision: main
-    path: app-of-apps/$TYPE
+    path: apps/$TYPE
   destination:
     server: https://kubernetes.default.svc
     namespace: k8sapps

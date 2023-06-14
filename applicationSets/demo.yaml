@@ -1,0 +1,51 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: demo
+  namespace: argocd
+spec:
+  generators:
+  - matrix:
+      generators:
+      - clusters: {}
+      - list:
+          elements:
+          - chart: guestbook
+            repo: registry-1.docker.io/lucj
+            revision: v1.0.2
+            namespace: guestbook
+            helm.values: ''
+          - chart: votingapp
+            repo: registry-1.docker.io/lucj
+            revision: v1.0.83
+            namespace: vote
+            helm.values: ''
+          - chart: webhooks
+            repo: registry-1.docker.io/lucj
+            revision: v1.0.7
+            namespace: webhooks
+            helm.values: |
+              domain: ""
+              tls: "false"
+              www.replicas: "1"
+              api.replicas: "2"
+              wss.replicas: "1"
+  template:
+    metadata:
+      name: '{{chart}}'
+    spec:
+      project: default
+      source:
+        repoURL: '{{repo}}'
+        chart: '{{chart}}'
+        targetRevision: '{{revision}}'
+        helm:
+          values: |
+            {{helm.values}}
+      destination:
+        server: '{{server}}'
+        namespace: '{{namespace}}'
+      syncPolicy:
+        automated: {}
+        syncOptions:
+          - CreateNamespace=true

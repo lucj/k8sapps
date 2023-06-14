@@ -1,0 +1,61 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: base
+  namespace: argocd
+spec:
+  generators:
+  - matrix:
+      generators:
+      - clusters: {}
+      - list:
+          elements:
+          - chart: traefik
+            repo: https://helm.traefik.io/traefik
+            revision: 22.1.0
+            namespace: traefik
+            helm.values: |
+              providers:
+                kubernetesIngress:
+                  publishedService:
+                    enabled: true
+          - chart: argo-rollouts
+            repo: https://argoproj.github.io/argo-helm
+            revision: 2.29.0
+            namespace: argo
+            helm.values: ''
+          - chart: reloader
+            repo: https://stakater.github.io/stakater-charts
+            revision: 0.0.126
+            namespace: reloader
+            helm.values: ''
+          - chart: cert-manager
+            repo: https://charts.jetstack.io
+            revision: 1.12.0
+            namespace: cert-manager
+            helm.values: |
+              installCRDs: "true"
+          - chart: descheduler
+            repo: https://kubernetes-sigs.github.io/descheduler
+            revision: 0.25.2
+            namespace: descheduler
+            helm.values: ''
+  template:
+    metadata:
+      name: '{{chart}}'
+    spec:
+      project: default
+      source:
+        repoURL: '{{repo}}'
+        chart: '{{chart}}'
+        targetRevision: '{{revision}}'
+        helm:
+          values: |
+            {{helm.values}}
+      destination:
+        server: '{{server}}'
+        namespace: '{{namespace}}'
+      syncPolicy:
+        automated: {}
+        syncOptions:
+          - CreateNamespace=true
