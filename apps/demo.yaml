@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: k8sapps-demo
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/lucj/k8sapps.git
+    targetRevision: main
+    path: apps/demo
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: k8sapps
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true

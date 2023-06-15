@@ -16,7 +16,7 @@ releases:
     labels:
       app: argocd
     chart: argo/argo-cd
-    version: ~5.28.2
+    version: ~5.36.1
 EOF
 ```
 
@@ -52,7 +52,7 @@ releases:
     labels:
       app: argocd
     chart: argo/argo-cd
-    version: ~5.28.2
+    version: ~5.36.1
     values:
       - repoServer:
           volumes:
@@ -61,7 +61,7 @@ releases:
                 secretName: age
           extraContainers:
           - name: plugin
-            image: lucj/argocd-plugin-helmfile:v0.0.10
+            image: lucj/argocd-plugin-helmfile
             command: ["/var/run/argocd/argocd-cmp-server"]
             securityContext:
               runAsNonRoot: true
