@@ -32,7 +32,7 @@ spec:
               wss.replicas: "1"
   template:
     metadata:
-      name: '{{chart}}'
+      name: '{{chart}}-{{name}}'
     spec:
       project: default
       source:
